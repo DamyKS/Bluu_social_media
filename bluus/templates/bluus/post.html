@@ -1,0 +1,84 @@
+{% extends "bluus/base.html" %}
+{% load bootstrap4 %}
+{% load static %}
+
+{% block content %}
+    <article>   
+        <section id="s_section">
+            {#The drop down menu botton #}
+            {% if request.user  == post.owner %}
+                <div class="dropdown  dropleft">
+                    <a class="btn  btn-sm " href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16"><path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg></a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <a class="dropdown-item" href="{% url 'bluus:edit_post' post.id %}"> Edit post</a>
+                        <a class="dropdown-item" href="{% url 'bluus:delete_post' post.id %}"> Delete </a>
+                    </div>
+                </div>
+            {% endif %}
+            
+            {% for profile in profiles %}
+                {% if post.owner == profile.owner %}
+                    {% if profile.profile_pic %}
+                        <a id ="user_name" href="{% url  'bluus:profile' post.owner.id %}" >  <img id="mini_dp" src="{{profile.profile_pic.url}}" />{{ post.owner.username}} </a> <br/>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}          
+            <p id="date">{{ post.date_added|date:'M d, Y H:i' }}</p> <br/> <p id="post">{{post.caption}}</p> <br/>
+            {% if post.pic %}                
+                <img id="post_pic" src = " {{post.pic.url}}">
+            {% endif %}
+            <p id="num_likes"><span id="num_likes_text">{{post.num_of_likes}} </span><img id="likes_pic" src="{% static 'pics/likes.jpeg' %}"/ > </p>
+            {% if request.user in post.liked_by.all %}
+                <a  href= "{% url 'bluus:like' post.id %}"> <img id="liked_pic" src="{% static 'pics/liked.png' %}"/ ><span id="liked_text" >Liked</span></a>
+            {% else %}
+                <a  href= "{% url 'bluus:like' post.id %}"> <img id="like_pic" src="{% static 'pics/like.png' %}"/ ><span id="like_text" >Like</span></a>
+            {% endif %}         
+        </section>
+        
+        <section id="section">
+            <form action="{% url 'bluus:post' post.id %}" method='post' >
+                
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                {% buttons %}
+                    <button name="submit" class="btn btn-primary">Comment</button>
+                {% endbuttons %}
+            </form>
+        </section>
+        
+        
+        {% for comment in comments%}
+            <section id="s_section">
+                {#The drop down menu botton #}
+                {% if request.user  == comment.owner %}
+                    <div  class="dropdown  dropleft">
+                        <a class="btn  btn-sm " href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16"><path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg></a>
+                          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item"  href="{% url 'bluus:edit_comment' comment.id %}">Edit comment</a>
+                            <a class="dropdown-item"  href="{% url 'bluus:delete_comment' comment.id %}"> Delete </a>
+                        </div>
+                    </div>
+                {% endif %}
+                
+                {% for profile in profiles %}
+                    {% if comment.owner == profile.owner %}
+                        {% if profile.profile_pic %}
+                            <a id="user_name" href="{% url  'bluus:profile' comment.owner.id %}"><img id="mini_dp" src="{{profile.profile_pic.url}}" /> {{comment.owner.username}}</a>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+                <p id="date">{{ comment.date_added|date:'M d, Y H:i' }}</p><br/>                         
+                <p id="comment">{{comment}}</p> <br/>
+                <p id="num_likes"><span id="num_likes_text" >{{comment.liked_by.count}}</span> <img id="likes_pic" src="{% static 'pics/likes.jpeg' %}"/ > </p> 
+                {% if request.user in comment.liked_by.all %}
+                    <a  href= "{% url 'bluus:like_comment' comment.id %}"> <img id="liked_pic" src="{% static 'pics/liked.png' %}"/ ><span id="liked_text" >Liked</span></a>
+                {% else %}
+                    <a  href= "{% url 'bluus:like_comment' comment.id %}"> <img id="like_pic" src="{% static 'pics/like.png' %}"/ ><span id="like_text" >Like</span></a>
+                {% endif %}          
+            </section>
+        {% empty%}
+            <p><small>  There are no comments yet. You're welcome to be the first to comment.</small></p>
+        {% endfor %} 
+    </article>
+
+{% endblock content %}

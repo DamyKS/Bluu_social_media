@@ -1,0 +1,18 @@
+{% extends "bluus/base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+    <section id="section">
+        <i><h2>Edit post:</h2></i>
+        
+        <form action="{% url 'bluus:edit_post' post.id %}" method='post' enctype="multipart/form-data">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <h6> You can only edit the caption of your post.</h6>
+            {% buttons %}
+                <button name="submit" class="btn btn-primary">Save changes</button>
+            {% endbuttons %}      
+        </form>
+    </section>
+
+{% endblock content %}

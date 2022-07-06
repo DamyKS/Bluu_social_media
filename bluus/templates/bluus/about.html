@@ -1,0 +1,32 @@
+{% extends "bluus/base.html" %}
+{% load static %}
+
+{% block content %}
+    <section id="s_section">
+        <div id="about_cont">
+            <p id="about_bluu">Bluu</p>
+            <p id="slogan">connecting your world...</p>
+        </div>
+        
+        <p><b>Bluu</b> is a new social media platform that allows you to connect with your family and friends through interactive posts.</p>
+        <h4>Bluu has the following functionalities :</h4>
+        <ul id="f_list">
+             <li>Register, login and logout</li>
+             <li> Search for users and posts</li>
+              <li>View NewsFeed which contains posts by users</li>
+            <li> Creare, view, edit, and delete posts and  comments</li>
+             <li>Like and unlike posts and comments</li>
+              <li>View the profile and posts of others</li>
+               <li>View and edit your own profile</li>
+                <li>Follow and unfollow others</li>             
+        </ul>
+    </section>
+    <section id="footer">
+        <p id="copyright">Ojeh Damian ©2022 All rights reserved</p>
+        <p id="nickname">DamyKS</p>
+        
+        <div id="footer_cont">
+            <a href="mailto:damianojeh@gmail.com"><img id="footer_pic" src="{% static 'footer/email.jpg' %}"/ > </a>           <a href="https://wa.me/message/EL6YL43PPF3EG1" ><img id="footer_pic" src="{% static 'footer/whatsapp.jpg' %}"/ ></a>   <a href="https://twitter.com/DamianOjeh?s=09" ><img id="footer_pic" src="{% static 'footer/twitter.jpg' %}"/ > </a>      <a href="https://www.facebook.com/profile.php?id=100076611390670"><img id="footer_pic" src="{% static 'footer/fb.png' %}"/ ></a>
+        </div>
+    </section>
+{% endblock content %}

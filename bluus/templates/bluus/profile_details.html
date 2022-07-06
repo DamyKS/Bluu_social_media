@@ -1,0 +1,49 @@
+{% extends "bluus/base.html" %}
+{% load bootstrap4 %}
+{% load static %}
+
+{% block content %}
+<article>
+    <section id="edit_sec">
+        <p id="profile_name"> {{user.username}} </p>
+        {% if user_profile.bio %}
+            <p id="bio">{{user_profile.bio}} </p>
+        {% endif %}
+        <hr/>
+            
+        <a  href= "{% url 'bluus:followers' user.id %}"><p id="num_followers">followers :<b> {{user_profile.followers.count }} </b> </p></a>
+        
+        <a  href= "{% url 'bluus:following' user.id %}"><p id="num_following">following: <b>{{user.follows.count}} </b></p></a>
+                     
+        {% if user_profile.gender %}
+             <p id="gender" > Gender:  {{user_profile.gender}}</p>
+        {% endif %}
+        
+        {% if user_profile.relationship_status%}
+             <p id="r_status" > Relationship Status:  {{user_profile.relationship_status}}</p>
+        {% endif %}
+        
+        {% if user_profile.city %}
+            <p id="city" > Lives in {{user_profile.city}}</p>
+        {% endif %}
+            
+        {% if user_profile.country %}
+            <p id="country">From {{user_profile.country}}</p>
+        {% endif %}
+        
+        {% if user_profile.phone_num %}
+            <p id="phone_num">Phone:  <b>{{user_profile.phone_num}}</b></p>
+        {% endif %}
+        
+        {% if user_profile.email %}
+            <p id="email">Email:  <b>{{user_profile.email}}</b></p>
+        {% endif %}
+        
+        {% if user_profile.dob %}
+            <p id="dob">Date of birth:  <b>{{user_profile.dob|date:'F d'}}</b></p>
+        {% endif %}
+        
+    </section>
+</article>
+
+{% endblock content %}

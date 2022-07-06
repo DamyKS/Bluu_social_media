@@ -1,0 +1,91 @@
+{% extends "bluus/base.html" %}
+{% load static %}
+
+{% block content %}
+    <article>
+        <section id="dp_section">
+            <img id="cover_photo" src ="{{user_profile.cover_photo.url}}"  /> <br/>
+            <img id="dp" src="{{user_profile.profile_pic.url}}" />
+            <p id="profile_name"> {{user.username}} </p>
+            
+            {% if request.user != user_profile.owner %}         
+                {% if request.user in user_profile.followers.all %}
+                    <div id="f1_border" ><a  href= "{% url 'bluus:follow' user.id %}"><p id="following">Following</p></a></div>
+                {% else %}
+                    <div id="f2_border" ><a  id="follow"href= "{% url 'bluus:follow' user.id %}"><p id="follow">Follow</p></a></div>
+                {% endif %}
+            {% endif %}
+            
+            {% if user_profile.bio %}
+                 <p id="bio">{{user_profile.bio}} </p>
+             {% endif %}
+             <hr/>
+            
+            <a  href= "{% url 'bluus:followers' user.id %}"><p id="num_followers">followers :<b> {{user_profile.followers.count }} </b> </p> </a>
+            
+            <a  href= "{% url 'bluus:following' user.id %}"><p id="num_following">following: <b>{{user.follows.count}} </b></p></a>
+                     
+            {% if user_profile.city %}
+                <p id="city" > Lives in {{user_profile.city}}</p>
+            {% endif %}
+            
+            {% if user_profile.country %}
+                <p id="country">From {{user_profile.country}}</p>
+            {% endif %}
+            
+            {% if user_profile.relationship_status%}
+                <p id="r_status" > Relationship Status:  {{user_profile.relationship_status}}</p>
+            {% endif %}
+            
+            {% if user_profile.owner == request.user %}
+                <a href="{% url 'bluus:edit_profile' user.id %}"> <span id="edit_pro">Edit Profile</span></a>
+            {% endif %}
+            <a href="{% url 'bluus:profile_details' user.id%}"><span id="see_more">See More</span></a>
+                              
+        </section>
+        
+        {#The idea here is to reuse the cide that displays posts in index.htm. It will display only the user's posts cos that's what the  profile view  passes unto it#}
+        
+        {% for post in user_posts%}
+            <section id="section">
+                {#The drop down menu botton #}
+                {% if request.user  == post.owner %}
+                    <div class="dropdown  dropleft">
+                        <a class="btn  btn-sm " href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16"><path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg></a>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item" href="{% url 'bluus:edit_post' post.id %}"> Edit post</a>
+                            <a class="dropdown-item" href="{% url 'bluus:delete_post' post.id %}"> Delete </a>
+                        </div>
+                    </div>
+                {% endif %}
+                
+                {% for profile in profiles %}
+                    {% if post.owner == profile.owner %}
+                        {% if profile.profile_pic %}
+                            <a id ="user_name" href="{% url  'bluus:profile' post.owner.id %}" >  <img id="mini_dp" src="{{profile.profile_pic.url}}" />{{ post.owner.username}} </a> <br/>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+                
+                <p id="date">{{ post.date_added|date:'M d, Y H:i' }}</p> <br/> <p id="post">{{post}}</p> <br/>             
+                <a href="{% url 'bluus:post' post.id %}">See more</a>
+            
+                {% if post.pic %}                
+                    <img id="post_pic" src = " {{post.pic.url}}">
+                {% endif %}
+                <p id="num_likes"><span id="num_likes_text" >{{post.num_of_likes}}</span> <img id="likes_pic" src="{% static 'pics/likes.jpeg' %}"/ > </p> 
+                {% if request.user in post.liked_by.all %}
+                    <a  href= "{% url 'bluus:like' post.id %}"> <img id="liked_pic" src="{% static 'pics/liked.png' %}"/ ><span id="liked_text" >Liked</span></a>
+                {% else %}
+                    <a  href= "{% url 'bluus:like' post.id %}"> <img id="like_pic" src="{% static 'pics/like.png' %}"/ ><span id="like_text" >Like</span></a>
+                {% endif %}          
+            </section>
+        {% empty %}
+            <p>There are no posts yet </p>
+        {% endfor %}
+        
+
+    </article>
+
+{% endblock content %}
+        

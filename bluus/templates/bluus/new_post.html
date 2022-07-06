@@ -1,0 +1,16 @@
+{% extends "bluus/base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+    <section id="s_section">
+        <i><h2>Add a new post:</h2></i>
+        <form action="{% url 'bluus:new_post' %}" method='post' enctype="multipart/form-data">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% buttons %}
+                <button name="submit" class="btn btn-primary">Add post</button>
+          {% endbuttons %}
+        </form>    
+    </section>
+
+{% endblock content %}

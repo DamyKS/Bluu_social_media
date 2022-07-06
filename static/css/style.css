@@ -1,0 +1,404 @@
+        
+.navbar {
+    background-color: #ADD8E6;
+}
+
+.dropdown {
+    text-align: center;
+    margin-bottom: -40px;
+    margin-top: 15px;
+    margin-left: auto; 
+    width: 50px;
+}
+
+#profile_name{
+    text-align: center;
+    color:black;
+    font-size: 30px;
+    font-weight: bold; 
+}
+
+body{
+    background-color:#dddddd;
+}
+
+#section{
+    max-height:700px;
+    max-width: 700px;
+    background-color:#eeeeee;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left:auto;
+    margin-right:auto;
+    padding:10px;
+    border-radius: 10px;
+    border: solid #595959;
+}
+
+#s_section{
+    max-width: 700px;
+    background-color:#eeeeee;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left:auto;
+    margin-right:auto;
+    padding:10px;
+    border-radius: 10px;
+    border: solid #595959;
+}
+
+#edit_sec {
+    max-width: 700px;
+    background-color:#eeeeee;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left:auto;
+    margin-right:auto;
+    padding:10px;
+    border-radius: 10px;
+    border: solid #595959;
+}
+
+#post_pic {
+    display: block;
+    max-width: 335px;
+    max-height:400px;
+    margin:  auto;
+}
+
+a:link{
+  text-decoration: none!important;
+}
+
+#user_name{
+    color: black;
+    font-size: 25px;
+    font-weight: bolder;
+}
+
+#date {
+    color: black;
+    font-size: 10px;
+    font-weight: bold;
+    text-align: left;
+    margin-top: -4px;
+    margin-bottom: 5px;
+    margin-left: 40px;
+}
+
+#post {
+    color: black;
+    font-size: 15px;
+    margin-top: -20px;
+    margin-bottom: 1px;
+}
+
+#comment {
+    color: black;
+    font-size: 15px;
+    margin-top: -10px;
+    margin-bottom: 1px;
+}
+
+#num_likes {
+    color: black;
+    font-size: 15px;
+    text-align: left;
+    margin-top: 1px;
+    margin-bottom: 1px;
+    margin-left: 40px;
+}
+
+#num_likes_text {
+    vertical-align: -3px;
+}
+
+#likes_pic {
+    width: 18px;
+    height: 18px;
+}
+
+#like_pic {
+    width:20px;
+    height: 20px;
+    margin-left: 40px;
+}
+
+#liked_pic {
+    width:20px;
+    height: 20px;
+    margin-left: 40px;
+}
+
+#like_text {
+    font-size: 10px;
+    color: black;
+    vertical-align: -1px;
+}
+
+#liked_text {
+    font-size: 10px;
+    color: blue;
+    vertical-align: -1px;
+}
+
+#mini_dp { 
+    width:40px;
+    height: 40px;
+    border-radius: 20px;
+    vertical-align: -10px;
+}
+
+#dp_section {
+    max-width: 700px;
+    background-color:#eeeeee;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left:auto;
+    margin-right:auto;
+    padding:10px;
+    border-radius: 10px;
+    border: solid #595959;
+}
+
+#cover_photo {
+    display: block;
+    width: 335px;
+    max-height:200px;
+    margin:  auto;
+}
+
+#dp {
+    display: block;
+    width: 150px;
+    height:150px;
+    border: 5px;
+    border-style: solid;
+    border-radius: 75px;
+    border-color: grey;
+    margin:  auto;
+    margin-top: -100px;
+}
+
+#following {
+    color: # add8e6;
+    text-align: center;
+}
+#f1_border {
+    border-style: solid;
+    width: 80px;
+    height: 30px;
+    border-color: #add8e6;
+    position: relative;
+    margin: auto;
+    border-radius: 10px;
+    box-shadow: 5px 5px 5px gray;
+}
+
+#follow {
+    color: # add8e6;
+    text-align: center;      
+}
+
+#f2_border {
+    border-style: solid;
+    width: 55px;
+    height: 27px;
+    border-color: #add8e6;
+    position: relative;
+    margin: auto;
+    border-radius: 10px;
+    box-shadow: 5px 5px 5px gray;
+}
+
+#bio {
+    font-size: 10px;
+    font-style: italic;
+    text-align: center;
+    color: grey;
+    margin-top: 8px;
+}
+
+#num_followers {
+    font-size: 15px;
+    font-style: italic;
+    border-color: #add8e6;
+    border-radius: 5px;
+}
+
+#num_following {
+    ofont-size: 15px;
+    font-style: italic;
+    border-color: #add8e6;
+    border-radius: 5px;
+    margin-top: -23px;
+}
+
+#city {
+    ofont-size: 15px;
+    font-style: italic;
+    color:  grey;
+    border-color: #add8e6;
+    border-radius: 5px;
+    margin-top: -23px;
+}
+
+#country{
+    font-size: 15px;
+    font-style: italic;
+    color:  grey;
+    border-color: #add8e6;
+    border-radius: 5px;
+    margin-top: -23px;
+}
+
+#phone_num {
+    font-size: 15px;
+    font-style: italic;
+    color:  grey;
+    border-color: #add8e6;
+    border-radius: 5px;
+    margin-top: -23px;
+}
+
+#email {
+    font-size: 15px;
+    font-style: italic;
+    color:  grey;
+    border-color: #add8e6;
+    border-radius: 5px;
+    margin-top: -23px;
+}
+
+#dob {
+    font-size: 15px;
+    font-style: italic;
+    color:  grey;
+    border-color: #add8e6;
+    border-radius: 5px;
+    margin-top: -23px;
+}
+
+#gender {
+    font-size: 15px;
+    font-style: italic;
+    color:  grey;
+    border-color: #add8e6;
+    border-radius: 5px;
+    margin-top: -23px;
+}
+
+#r_status {
+    font-size: 15px;
+    font-style: italic;
+    color:  grey;
+    border-color: #add8e6;
+    border-radius: 5px;
+    margin-top: -23px;
+}
+
+#edit_pro {
+    color: # add8e6;
+    width: 55px;
+    height: 27px;
+    border: solid #595959;
+    position: relative;
+    margin: auto;
+    border-radius: 10px;
+    box-shadow: 5px 5px 5px gray;
+}
+
+#see_more {
+    color: # add8e6;
+    width: 55px;
+    height: 27px;
+    border: solid #595959;
+    position: relative;
+    margin-left: 15px;
+    border-radius: 10px;
+    box-shadow: 5px 5px 5px gray;
+}
+
+#b_name{
+    font-weight: bolder;
+    font-size: 35px;
+    color: black;
+    border: solid;
+    padding: 3px;
+    border-radius: 10px;
+}
+
+#footer{
+    background-color: black;
+    color: #eeeeee;
+    height: 250px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    max-width: 700px;
+    margin: auto;   
+    padding: 30px;
+    
+}
+
+#footer_pic {
+    height:  40px;
+    width: 40px;
+    margin-left: 25px;
+}
+
+#footer_cont {
+    margin: auto;
+    width: 300px;
+}
+
+#nickname {
+    marigin-top: 1px;
+    text-align: center;
+    font-size: 30px;
+    font-family: cursive;
+}
+
+#copyright {
+    font-style: italic;
+    text-align: center;
+    margin-top: 30px;
+}
+
+#about_bluu {
+    font-size: 80px;
+    font-weight: bolder;
+    color: black;
+    text-align: center;
+}
+
+#about_cont {
+    background-color: #ADD8E6;
+    margin: auto;
+    width: 200px;
+    border-radius: 18px;
+    padding: 2px;
+    border: solid 5px;
+    box-shadow: 5px 5px 3px grey;
+}
+#slogan {
+    text-align: center;
+    margin-top: -40px;
+    font-size: 15p ;
+    font-weight: bold;
+    font-style: italic;
+}
+
+#f_list {
+    font-size: 15px;
+}
+
+#search_bar {
+    width: 120px;
+    float: right;
+    margin-top: 7px;
+}
+
+#search_div {
+    width: 300px;
+}

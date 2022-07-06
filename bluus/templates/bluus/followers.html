@@ -1,0 +1,23 @@
+{% extends "bluus/base.html" %}
+{% load static %}
+
+{% block content %}
+    <section id="section">
+        <h2> Followers :</h2>
+    </section>
+    
+    {% for follower in followers %}
+        <section id="section">
+            {% for profile in profiles %}
+                {% if follower == profile.owner %}
+                    <a id ="user_name" href="{% url  'bluus:profile' profile.owner.id %}" >  <img id="mini_dp" src="{{profile.profile_pic.url}}" />{{ follower.username}} </a>
+                 {% endif %}
+             {% endfor %}
+        </section>
+    {% empty %}
+        <section id="section">
+            <h5>There are no followers yet! </h5>
+        </section>
+    {% endfor %}
+
+{% endblock content %}

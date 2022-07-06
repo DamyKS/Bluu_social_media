@@ -1,0 +1,20 @@
+{% extends "bluus/base.html" %}
+{% load bootstrap4 %}
+{% load static %}
+
+{% block content %}
+    <section id="section">
+        <i><h2>Register:</h2></i>
+        <form method="post" action="{% url 'users:register' %}">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% buttons %}
+                <button name="submit" class="btn btn-primary">Register</button>
+            {% endbuttons %}
+            <input type="hidden" name="next" value="{% url 'bluus:index' %}" />
+        </form>
+         <p id="alt_login">Already have an account? <a href="{% url 'users:login' %}">Log In</a>
+    </section>
+
+{% endblock content %}
+        
