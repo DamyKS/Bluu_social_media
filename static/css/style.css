@@ -1,6 +1,5 @@
-        
-.navbar {
-    background-color: #ADD8E6;
+nav .navbar-nav li a{
+    color: white !important;
 }
 
 .dropdown {
@@ -373,7 +372,7 @@ a:link{
 }
 
 #about_cont {
-    background-color: #ADD8E6;
+    background-color: #0275d8;
     margin: auto;
     width: 200px;
     border-radius: 18px;
