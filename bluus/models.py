@@ -55,4 +55,22 @@ class Profile(models.Model):
     def __str__(self):
         """return a string representation of a profile. """
         return self.owner.username
+
+class Chat(models.Model):
+    """A class to represent a  chat between two users"""
+    #functiions like a list that holds the users that are involved in a chat
+    participants=models.ManyToManyField(User, related_name="participates_in")
     
+class Message(models.Model):
+    """A class to represent a message by a user"""
+    text=models.TextField()
+    owner=models.ForeignKey(User, on_delete=models.CASCADE)
+    date_sent=models.DateTimeField(auto_now_add=True)
+    chat=models.ForeignKey(Chat, on_delete=models.CASCADE, related_name="message")
+    
+    def __str__(self):
+        """To return a string representation of  the message text"""
+        if len(self.text)>30:
+            return f"{self.text[:30]}..."
+        else:
+            return self.text

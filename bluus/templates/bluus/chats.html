@@ -1,0 +1,23 @@
+{% extends "bluus/base.html" %}
+{% load bootstrap4 %}
+{% load static %}
+
+{% block content %}
+    <section id="section">
+        <h1 id="chats_list_header">Chats </h1>
+    </section>
+    
+    {% for counterpart in counterparts %}
+        {% for profile in profiles %}
+            {% if profile.owner == counterpart %}
+                <section id="section">
+                    <a id ="user_name" href="{% url  'bluus:chat' counterpart.id %}" ><img id="mini_dp" src="{{profile.profile_pic.url}}" />{{profile.owner.username}}</a>
+                </section>
+            {% endif %}
+        {% endfor %}
+    {% empty %}
+        <section id="section">
+            <p> You don't have any chats yet </p>
+        </section>        
+    {% endfor %}
+{% endblock content %}

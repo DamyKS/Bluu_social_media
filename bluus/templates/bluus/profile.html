@@ -6,13 +6,13 @@
         <section id="dp_section">
             <img id="cover_photo" src ="{{user_profile.cover_photo.url}}"  /> <br/>
             <img id="dp" src="{{user_profile.profile_pic.url}}" />
-            <p id="profile_name"> {{user.username}} </p>
+            <p id="profile_name"> {{user.username}}</p>
             
             {% if request.user != user_profile.owner %}         
-                {% if request.user in user_profile.followers.all %}
-                    <div id="f1_border" ><a  href= "{% url 'bluus:follow' user.id %}"><p id="following">Following</p></a></div>
+                {% if request.user in user_profile.followers.all %}                    
+                    <div  id="follow_button"  class="f1_border"  ><a href="#"><p class="following" id="follow_text" data_user_id="{{user_profile.id}}">Following</p></a></div>
                 {% else %}
-                    <div id="f2_border" ><a  id="follow"href= "{% url 'bluus:follow' user.id %}"><p id="follow">Follow</p></a></div>
+                    <div  id="follow_button"  class="f2_border"  ><a href="#"><p class="follow"  id="follow_text" data_user_id="{{user_profile.id}}">Follow</p></a></div>
                 {% endif %}
             {% endif %}
             
@@ -20,8 +20,11 @@
                  <p id="bio">{{user_profile.bio}} </p>
              {% endif %}
              <hr/>
+             {% if request.user != user_profile.owner %}
+                 <a  href= "{% url 'bluus:chat' user.id %}"><p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16"><path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/></svg><span id="message_link" > Message</span><b></p></a>
+             {% endif %}             
             
-            <a  href= "{% url 'bluus:followers' user.id %}"><p id="num_followers">followers :<b> {{user_profile.followers.count }} </b> </p> </a>
+            <a  href= "{% url 'bluus:followers' user.id %}"><p id="num_followers">followers :<b id="followers_count"> {{user_profile.followers.count }} </b> </p> </a>
             
             <a  href= "{% url 'bluus:following' user.id %}"><p id="num_following">following: <b>{{user.follows.count}} </b></p></a>
                      
@@ -44,7 +47,7 @@
                               
         </section>
         
-        {#The idea here is to reuse the cide that displays posts in index.htm. It will display only the user's posts cos that's what the  profile view  passes unto it#}
+        {#The idea here is to reuse the code that displays posts in index.htm. It will display only the user's posts cos that's what the  profile view  passes unto it#}
         
         {% for post in user_posts%}
             <section id="section">
@@ -73,11 +76,11 @@
                 {% if post.pic %}                
                     <img id="post_pic" src = " {{post.pic.url}}">
                 {% endif %}
-                <p id="num_likes"><span id="num_likes_text" >{{post.num_of_likes}}</span> <img id="likes_pic" src="{% static 'pics/likes.jpeg' %}"/ > </p> 
+                <p id="num_likes"><span class="num_likes_text"  id="{{post.id}}">{{post.num_of_likes}}</span> <img id="likes_pic" src="{% static 'pics/likes.jpeg' %}"/ > </p>
                 {% if request.user in post.liked_by.all %}
-                    <a  href= "{% url 'bluus:like' post.id %}"> <img id="liked_pic" src="{% static 'pics/liked.png' %}"/ ><span id="liked_text" >Liked</span></a>
+                    <span  id="like_button" data-catid="{{ post.id }}"> <img class="liked_pic" id="like_pic{{post.id}}" src="{% static 'pics/liked.png' %}"/ ></span>
                 {% else %}
-                    <a  href= "{% url 'bluus:like' post.id %}"> <img id="like_pic" src="{% static 'pics/like.png' %}"/ ><span id="like_text" >Like</span></a>
+                    <span id="like_button" data-catid="{{post.id}}"> <img class="like_pic" id="like_pic{{post.id}}" src="{% static 'pics/like.png' %}"/ ></span>
                 {% endif %}          
             </section>
         {% empty %}
@@ -86,6 +89,69 @@
         
 
     </article>
-
+    
+    {% csrf_token %}  
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+                                           
+    <script>
+        $(document).on('click', '#follow_text', function (e) {
+            e.preventDefault();
+            var user_id;
+            user_id= $(this).attr("data_user_id");
+            $.ajax({
+                type: 'POST',
+                url: '{% url "bluus:follow" %}',
+                data: {
+                    profile_id:user_id,
+                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                    action: 'post'
+                },
+                success: function (json) {
+                    document.getElementById("followers_count").innerHTML = json['result'];
+                        
+                    if (json["state"] == "following"){
+                        document.getElementById("follow_text").innerHTML="Following";
+                         document.getElementById("follow_button").style.width="80px"
+                            
+                    }else{
+                        document.getElementById("follow_text").innerHTML="Follow";
+                        document.getElementById("follow_button").style.width="55px"                 
+                    }                    
+                },
+                error: function (xhr, errmsg, err) {
+        
+                }
+            });
+        })  
+    </script>
+    
+    <script>
+        $(document).on('click', '#like_button', function (e) {
+            e.preventDefault();
+            var catid;
+            catid = $(this).attr("data-catid");
+            $.ajax({
+                type: 'POST',
+                url: '{% url "bluus:like" %}',
+                data: {
+                    postid: catid,
+                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                    action: 'post'
+                },
+                success: function (json) {
+                    document.getElementById(catid).innerHTML = json['result']
+                    if (json["pic"] == "liked"){
+                        document.getElementById('like_pic'+catid).src="{% static 'pics/liked.png' %}"
+                    }else{
+                        document.getElementById('like_pic'+catid).src="{% static 'pics/like.png' %}"                    
+                    }                    
+                },
+                error: function (xhr, errmsg, err) {
+        
+                }
+            });
+        })  
+    </script>
+    
 {% endblock content %}
         

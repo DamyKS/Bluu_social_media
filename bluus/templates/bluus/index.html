@@ -46,16 +46,46 @@
                     <img id="post_pic" src = " {{post.pic.url}}">
                 {% endif %}
                 
-                <p id="num_likes"><span id="num_likes_text" >{{post.num_of_likes}}</span> <img id="likes_pic" src="{% static 'pics/likes.jpeg' %}"/ > </p> 
+                <p id="num_likes"><span class="num_likes_text"  id="{{post.id}}">{{post.num_of_likes}}</span> <img id="likes_pic" src="{% static 'pics/likes.jpeg' %}"/ > </p> 
                 {% if request.user in post.liked_by.all %}
-                    <a  href= "{% url 'bluus:like' post.id %}"> <img id="liked_pic" src="{% static 'pics/liked.png' %}"/ ><span id="liked_text" >Liked</span></a>
-                {% else %}
-                    <a  href= "{% url 'bluus:like' post.id %}"> <img id="like_pic" src="{% static 'pics/like.png' %}"/ ><span id="like_text" >Like</span></a>
+                    <span  id="like_button" data-catid="{{ post.id }}"> <img class="liked_pic" id="like_pic{{post.id}}" src="{% static 'pics/liked.png' %}"/ ></span>
+                {% else %}               
+                    <span id="like_button" data-catid="{{post.id}}"> <img class="like_pic" id="like_pic{{post.id}}" src="{% static 'pics/like.png' %}"/ ></span>
                 {% endif %}          
             </section>
         {% empty %}
             <p>There are no posts yet </p>
         {% endfor %}
+        
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>    
+    <script>
+        $(document).on('click', '#like_button', function (e) {
+            e.preventDefault();
+            var catid;
+            catid = $(this).attr("data-catid");
+            $.ajax({
+                type: 'POST',
+                url: '{% url "bluus:like" %}',
+                data: {
+                    postid: catid,
+                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                    action: 'post'
+                },
+                success: function (json) {
+                    document.getElementById(catid).innerHTML = json['result']
+                    if (json["pic"] == "liked"){
+                        document.getElementById('like_pic'+catid).src="{% static 'pics/liked.png' %}"
+                    }else{
+                        document.getElementById('like_pic'+catid).src="{% static 'pics/like.png' %}"                    
+                    }                    
+                },
+                error: function (xhr, errmsg, err) {
+        
+                }
+            });
+        })  
+    </script>
+      
 {% endblock content %}
     
 

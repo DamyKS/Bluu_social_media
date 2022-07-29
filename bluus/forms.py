@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Post, Comment, Profile
+from .models import Post, Comment, Profile, Message
 
 class PostForm(forms.ModelForm):
     class Meta:
@@ -22,4 +22,10 @@ class ProfileForm(forms.ModelForm):
         fields=['bio' , 'cover_photo', 'profile_pic', 'phone_num', 'email', 'dob', 'city', 'country', 'gender', 'relationship_status']
         labels={'bio': 'Bio' , 'cover_photo': 'Cover Photo', 'profile_pic': 'Profile Photo', 'phone_num': 'Phone(add country code, e.g 234)', 'Email': 'Email', 'dob': 'Date of birth(YYYY-MM-DD)', 'city': 'City', 'country':'Country', 'gender':'Gender', 'relationship_status': 'Relationship Status'}
         
+class MessageForm(forms.ModelForm):
+    class Meta:
+        model=Message
+        fields=['text']
+        labels={'text':''}
+        widgets = {'text': forms.Textarea(attrs={'cols': 4, 'rows': 2})}
         

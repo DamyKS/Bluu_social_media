@@ -7,6 +7,7 @@ from django.urls import path
 from . import views
 
 app_name = 'bluus'
+
 urlpatterns = [
     # News Feed
     path('', views.index, name='index'),
@@ -19,11 +20,11 @@ urlpatterns = [
     # Page for editing a comment
     path('edit_comment/<int:comment_id>/', views.edit_comment, name='edit_comment'),
     #to like a post
-    path('like_post/<int:post_id>/', views.like, name='like'),
+    path('like_post', views.like, name='like'),
     #to view a user's profile page'
     path('profile/<int:user_id>/', views.profile, name='profile'),
     #to follow or unfollow a user
-    path('follow/<int:user_id>/', views.follow, name='follow'),
+    path('follow', views.follow, name='follow'),
     #to see a user's full profile details
     path('profile_details/<int:user_id>/', views.profile_details, name='profile_details'),
     #edit profile
@@ -33,7 +34,7 @@ urlpatterns = [
     #to delete a comment
     path('delete_comment/<int:comment_id>/', views.delete_comment, name='delete_comment'),
     #to like a comment
-    path('like_comment/<int:comment_id>/', views.like_comment, name='like_comment'),
+    path('like_comment', views.like_comment, name='like_comment'),
     #display followers
     path('followers/<int:user_id>/', views.followers, name='followers'),
     #display followings
@@ -42,5 +43,9 @@ urlpatterns = [
     path('about', views.about, name='about'),
     #search feature
     path('search/', views.search, name='search'),
+    #chat
+    path('chat/<int:user_id>/',views.chat,name='chat'),
+    #list of chats a user is in
+    path('chats',views.chats, name='chats'),
     
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)#for saving the pics

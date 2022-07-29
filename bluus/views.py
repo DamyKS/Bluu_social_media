@@ -1,15 +1,19 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.http import Http404
+from django.http import Http404,JsonResponse
 from django.db.models import Q
 
-from .models import Post, Comment, Profile
-from .forms import PostForm, CommentForm, ProfileForm
+from .models import Post, Comment, Profile, Chat, Message
+
+from .forms import PostForm, CommentForm, ProfileForm, MessageForm
 
 def index(request):
     """Show the newsfeed and display all posts"""
-    posts = Post.objects.order_by('-date_added')
+    #post=Post.objects.get(id=41)
+    #posts=[]
+    #posts.append(post)
+    posts = Post.objects.order_by('-num_of_likes')
     profiles=Profile.objects.all()
     context = {'posts': posts,'profiles': profiles}
     return render(request, 'bluus/index.html', context)
@@ -138,45 +142,60 @@ def delete_comment(request, comment_id):
     
     
 @login_required
-def like(request, post_id):
+def like(request):
     """like an existing ppst"""
-    post=Post.objects.get(id=post_id)
+    if request.POST.get('action') == 'post':
+        result=''
+        post_id=int(request.POST.get('postid'))
+        
+        post=Post.objects.get(id=post_id)
+        
+        is_liked=False
+        for person in post.liked_by.all():
+            if person == request.user:
+                is_liked=True
+                break
+        
+        if is_liked==False:
+            post.liked_by.add(request.user)
+            pic="liked"
+        if is_liked==True:
+            post.liked_by.remove(request.user)
+            pic="like"
+                        
+        post.num_of_likes=post.liked_by.count()
+        post.save()
+        result=post.num_of_likes
     
-    is_liked=False
-    for person in post.liked_by.all():
-        if person == request.user:
-            is_liked=True
-            break
-    
-    if is_liked==False:
-        post.liked_by.add(request.user)
-    if is_liked==True:
-        post.liked_by.remove(request.user)
-    post.num_of_likes=post.liked_by.count()
-    post.save()
-    
-    return redirect('bluus:index')
+    return JsonResponse({'result':result, "pic":pic})
 
 @login_required
-def like_comment(request, comment_id):
+def like_comment(request):    
     """like an existing comment"""
-    comment=Comment.objects.get(id=comment_id)
-    
-    is_liked=False
-    for person in comment.liked_by.all():
-        if person == request.user:
-            is_liked=True
-            break
-    
-    if is_liked==False:
-        comment.liked_by.add(request.user)
-    if is_liked==True:
-        comment.liked_by.remove(request.user)
+    if request.POST.get('action') == 'post':
+        result=''
+        comment_id=int(request.POST.get('commentid'))
         
-    comment.save()
-    post=comment.post
+        comment=Comment.objects.get(id=comment_id)
+        
+        is_liked=False
+        for person in comment.liked_by.all():
+            if person == request.user:
+                is_liked=True
+                break
+        
+        if is_liked==False:
+            comment.liked_by.add(request.user)
+            pic="liked"
+        if is_liked==True:
+            comment.liked_by.remove(request.user)
+            pic="like"                        
+
+        comment.save()
+        comment_num_of_likes=comment.liked_by.count()
+        result=comment_num_of_likes
     
-    return redirect('bluus:post', post_id=post.id)
+    return JsonResponse({'result':result, "pic":pic})
     
 def profile(request, user_id):
     """show a user's profile page"""
@@ -213,25 +232,31 @@ def following(request, user_id):
   
       
 @login_required
-def follow(request, user_id):
+def follow(request):
     """allow a user to follow or unfollow another user"""
-    #get the specific  profile
-    profile=Profile.objects.get(id=user_id)
-    if request.user==profile.owner:
-        return redirect('bluus:profile',user_id)
-    else:        
-        followed=False
-        for person in profile.followers.all():
-            if person==request.user:
-                followed=True
-                break
-        if followed==False:
-            profile.followers.add(request.user)
-        if followed==True:
-            profile.followers.remove(request.user)
-            
-        profile.save()
-        return redirect('bluus:profile',user_id)
+    if request.POST.get('action') == 'post':
+        result=''
+        profile_id=int(request.POST.get('profile_id'))
+        #get the specific profile
+        profile=Profile.objects.get(id=profile_id)
+        if request.user==profile.owner:
+            return redirect('bluus:profile',profile_id)            
+        else:        
+            followed=False
+            for person in profile.followers.all():
+                if person==request.user:
+                    followed=True
+                    break
+            if followed==False:
+                profile.followers.add(request.user)
+                state="following"
+            if followed==True:
+                profile.followers.remove(request.user)
+                state="not_following"
+                
+            profile.save()
+            result=profile.followers.count()
+            return JsonResponse({'result':result, "state":state})
 
 def profile_details(request,user_id):
     """To show the full details of a user's profile"""
@@ -281,3 +306,73 @@ def search(request):
     context={'search_profiles': search_profiles, 'search_posts': search_posts, 'profiles': profiles}
     
     return render(request, 'bluus/search.html', context)
+
+@login_required    
+def chat(request, user_id):
+    chatted_before=False
+    #get the other user involved in the chat
+    counterpart=User.objects.get(id=user_id)
+    counterpart_profile= Profile.objects.get(id=user_id)
+    #make sure a user cannot chat themself
+    if counterpart==request.user:
+        raise Http404
+    #get all chats the said user is in
+    chats=request.user.participates_in.all()
+    
+    for chat in chats:
+        #check if counterpart is in any of those chats. which would mean the two of them have chatted before
+        if counterpart in chat.participants.all():
+            chatted_before=True
+            ongoing_chat=chat
+            break
+    if chatted_before:
+        #return their ongoing_chat and a message form
+        
+        # A form to add messages
+        if request.method != 'POST':
+            # No data submitted; create a blank form.
+            form=MessageForm()
+        else:
+            # POST data submitted; process data.
+            form = MessageForm(data=request.POST)
+            if form.is_valid():
+                new_message= form.save(commit=False)
+                new_message.chat=ongoing_chat
+                new_message.owner=request.user
+                new_message.save()
+                return redirect(request.path)
+            
+        context={'ongoing_chat':ongoing_chat, 'form': form, 'counterpart':counterpart,'counterpart_profile':counterpart_profile}
+        return render(request,'bluus/chat.html', context)
+    else:
+        #create a new chat and save it to the database
+        ongoing_chat=Chat()
+        ongoing_chat.save()
+        #since the chat is now saved, add the two participants
+        ongoing_chat.participants.add(request.user)
+        ongoing_chat.participants.add(counterpart)
+        #save the chat and render it
+        ongoing_chat.save()
+        form=MessageForm()
+        
+        context={'ongoing_chat': ongoing_chat, 'form':form, 'counterpart':counterpart,'counterpart_profile':counterpart_profile}
+        return render(request, 'bluus/chat.html', context)
+
+@login_required              
+def chats(request):
+    """to return a list of all the chats a user is in"""
+     
+    #get all the chats the user is in
+    chats=request.user.participates_in.all()
+    
+    profiles=Profile.objects.all()
+    counterparts=[ ]
+     
+    for chat in chats:
+        for participant in chat.participants.all():
+            if participant != request.user:
+                counterparts.append(participant)
+     
+    context={'counterparts':counterparts,'profiles':profiles}
+    return render(request,'bluus/chats.html', context)
+         

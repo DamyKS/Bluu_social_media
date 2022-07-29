@@ -23,15 +23,16 @@
                     {% endif %}
                 {% endif %}
             {% endfor %}          
-            <p id="date">{{ post.date_added|date:'M d, Y H:i' }}</p> <br/> <p id="post">{{post.caption}}</p> <br/>
+            <p id="date">{{ post.date_added|date:'M d, Y H:i' }}</p> <br/> <p id="post">{{post.caption}} {{post.id}}</p> <br/>
             {% if post.pic %}                
                 <img id="post_pic" src = " {{post.pic.url}}">
             {% endif %}
-            <p id="num_likes"><span id="num_likes_text">{{post.num_of_likes}} </span><img id="likes_pic" src="{% static 'pics/likes.jpeg' %}"/ > </p>
+            <p id="num_likes"><span class="num_likes_text"  id="{{post.id}}">{{post.num_of_likes}}</span> <img id="likes_pic" src="{% static 'pics/likes.jpeg' %}"/ > </p>
+            
             {% if request.user in post.liked_by.all %}
-                <a  href= "{% url 'bluus:like' post.id %}"> <img id="liked_pic" src="{% static 'pics/liked.png' %}"/ ><span id="liked_text" >Liked</span></a>
+                <span  id="like_button" data-catid="{{ post.id }}"> <img class="liked_pic" id="like_pic{{post.id}}" src="{% static 'pics/liked.png' %}"/ ></span>
             {% else %}
-                <a  href= "{% url 'bluus:like' post.id %}"> <img id="like_pic" src="{% static 'pics/like.png' %}"/ ><span id="like_text" >Like</span></a>
+                <span id="like_button" data-catid="{{post.id}}"> <img class="like_pic" id="like_pic{{post.id}}" src="{% static 'pics/like.png' %}"/ ></span>
             {% endif %}         
         </section>
         
@@ -68,17 +69,75 @@
                     {% endif %}
                 {% endfor %}
                 <p id="date">{{ comment.date_added|date:'M d, Y H:i' }}</p><br/>                         
-                <p id="comment">{{comment}}</p> <br/>
-                <p id="num_likes"><span id="num_likes_text" >{{comment.liked_by.count}}</span> <img id="likes_pic" src="{% static 'pics/likes.jpeg' %}"/ > </p> 
-                {% if request.user in comment.liked_by.all %}
-                    <a  href= "{% url 'bluus:like_comment' comment.id %}"> <img id="liked_pic" src="{% static 'pics/liked.png' %}"/ ><span id="liked_text" >Liked</span></a>
-                {% else %}
-                    <a  href= "{% url 'bluus:like_comment' comment.id %}"> <img id="like_pic" src="{% static 'pics/like.png' %}"/ ><span id="like_text" >Like</span></a>
+                <p id="comment">{{comment}} {{comment.id}}</p> <br/>
+                 
+                <p id="num_likes"><span class="num_likes_text"  id="comm{{comment.id}}">{{comment.liked_by.count}}</span> <img id="likes_pic" src="{% static 'pics/likes.jpeg' %}"/ > </p>
+                {% if request.user in comment.liked_by.all %}                    
+                    <span  id="like_comment_button" data-catid="{{comment.id}}"> <img class="liked_pic" id="like_pic_comm{{comment.id}}" src="{% static 'pics/liked.png' %}"/ ></span>
+                {% else %}                    
+                    <span id="like_comment_button" data-catid="{{comment.id}}"> <img class="like_pic" id="like_pic_comm{{comment.id}}" src="{% static 'pics/like.png' %}"/ ></span>
                 {% endif %}          
             </section>
         {% empty%}
             <p><small>  There are no comments yet. You're welcome to be the first to comment.</small></p>
         {% endfor %} 
     </article>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>    
+    <script>
+        $(document).on('click', '#like_button', function (e) {
+            e.preventDefault();
+            var catid;
+            catid = $(this).attr("data-catid");
+            $.ajax({
+                type: 'POST',
+                url: '{% url "bluus:like" %}',
+                data: {
+                    postid: catid,
+                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                    action: 'post'
+                },
+                success: function (json) {
+                    document.getElementById(catid).innerHTML = json['result']
+                    if (json["pic"] == "liked"){
+                        document.getElementById('like_pic'+catid).src="{% static 'pics/liked.png' %}"
+                    }else{
+                        document.getElementById('like_pic'+catid).src="{% static 'pics/like.png' %}"                    
+                    }                    
+                },
+                error: function (xhr, errmsg, err) {
+        
+                }
+            });
+        })  
+    </script>  
+     
+    <script>
+        $(document).on('click', '#like_comment_button', function (e) {
+            e.preventDefault();
+            var catid;
+            catid = $(this).attr("data-catid");
+            $.ajax({
+                type: 'POST',
+                url: '{% url "bluus:like_comment" %}',
+                data: {
+                    commentid: catid,
+                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                    action: 'post'
+                },
+                success: function (json) {
+                    document.getElementById("comm"+catid).innerHTML = json['result']
+                    if (json["pic"] == "liked"){
+                        document.getElementById('like_pic_comm'+catid).src="{% static 'pics/liked.png' %}"
+                    }else{
+                        document.getElementById('like_pic_comm'+catid).src="{% static 'pics/like.png' %}"                    
+                    }                    
+                },
+                error: function (xhr, errmsg, err) {
+        
+                }
+            });
+        })  
+    </script>     
 
 {% endblock content %}
