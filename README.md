@@ -17,12 +17,12 @@ Bluu has the following functionalities :
 Tech used:
 
 Frontend:
--HTML
--CSS(Vanilla + Bootstrap) 
--JAVASCRIPT 
+- HTML
+- CSS(Vanilla + Bootstrap) 
+- JAVASCRIPT 
 
 Backend:
--Django Framework (Python) 
+- Django Framework (Python) 
 
 Link to the web app [Bluu](https://bluu-app.herokuapp.com/) 
 
