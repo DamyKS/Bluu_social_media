@@ -24,5 +24,5 @@ Frontend:
 Backend:
 - Django Framework (Python) 
 
-Link to the web app [Bluu](https://bluu-app.herokuapp.com/) 
+Link to the web app: [Bluu](https://bluu-app.herokuapp.com/) 
 
