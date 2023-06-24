@@ -98,7 +98,7 @@ DATABASES = {
     'default': default_db_config,
 }
 
-}
+
 
 
 # Password validation
