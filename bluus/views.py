@@ -202,6 +202,9 @@ def profile(request, user_id):
     #get the users details 
     user=User.objects.get(id=user_id)
     user_profile=Profile.objects.get(id=user_id)
+    #PS
+    """For the default dp or cover photp tp show , you need to upload twp pics to your cloudinary and save them as default_pd and default_c_pic . There is mo need to add the file extemsion , cloudonary does that already """
+    
     profiles=Profile.objects.all()
     user_posts=user.post_set.order_by('-date_added')
     
